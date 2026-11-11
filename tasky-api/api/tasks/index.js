@@ -10,10 +10,11 @@ router.get('/', async (req, res) => {
 });
 
 // create a task
-router.post('/', async (req, res) => {
+router.post('/', asyncHandler(async (req, res) => {
     const task = await Task(req.body).save();
     res.status(201).json(task);
-});
+}));
+
 // Update Task
 router.put('/:id', async (req, res) => {
     if (req.body._id) delete req.body._id;
@@ -38,11 +39,5 @@ router.delete('/:id', async (req, res) => {
         res.status(404).json({ code: 404, msg: 'Unable to find Task' });
     }
 });
-
-// create a task
-router.post('/', asyncHandler(async (req, res) => {
-    const task = await Task(req.body).save();
-    res.status(201).json(task);
-}));
 
 export default router;

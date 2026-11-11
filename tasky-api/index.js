@@ -2,6 +2,7 @@ import dotenv from 'dotenv';
 import express from 'express';
 import tasksRouter from './api/tasks';
 import './db';
+import cors from 'cors';
 
 
 dotenv.config();
@@ -17,14 +18,19 @@ const errHandler = (err, req, res, next) => {
 
 
 const app = express();
-app.use(errHandler);
 
 const port = process.env.PORT;
 
 app.use(express.json());
 app.use(express.static('public'));
+// Enable CORS for all requests
+app.use(cors());
+
 
 app.use('/api/tasks', tasksRouter);
+
+// Error handler must be the last middleware so it can catch errors from the routes
+app.use(errHandler);
 
 app.listen(port, () => {
   console.info(`Server running at ${port}`);

@@ -17,5 +17,10 @@ const dateValidator = (date) => {
 }
 TaskSchema.path("deadline").validate(dateValidator);
 
+userId: {
+    type: Schema.Types.ObjectId,
+    ref: 'User'
+},
+
 
 export default mongoose.model('Task', TaskSchema);

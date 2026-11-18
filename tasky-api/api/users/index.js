@@ -1,12 +1,10 @@
 import express from 'express';
 import User from './userModel';
-import usersRouter from './api/users';
 import asyncHandler from 'express-async-handler';
 import jwt from 'jsonwebtoken';
 
 
-const router = express.Router(); 
-app.use('/api/users', usersRouter);
+const router = express.Router();
 
 // Get all users
 router.get('/', async (req, res) => {

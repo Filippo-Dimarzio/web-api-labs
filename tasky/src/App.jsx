@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import  { useState, useEffect } from 'react';
 import { getTasks, addTask, deleteTask, updateTask } from './api/tasky-api';
 import Task from './assets/components/Task.jsx';
 import AddTaskForm from './components/Form.jsx';

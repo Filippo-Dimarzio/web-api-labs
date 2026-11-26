@@ -31,12 +31,6 @@ router.post('/', asyncHandler(async (req, res) => {
     }
 }));
 
-async function registerUser(req, res) {
-    // Add input validation logic here
-    await User.create(req.body);
-    res.status(201).json({ success: true, msg: 'User successfully created.' });
-}
-
 async function authenticateUser(req, res) {
     const user = await User.findByUserName(req.body.username);
     if (!user) {

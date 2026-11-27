@@ -2,16 +2,25 @@ import { useContext, useState } from "react";
 import { Navigate, useLocation } from "react-router";
 import { AuthContext } from "../contexts/authContext";
 import { Link } from "react-router";
-import { Container, Typography, TextField, Button, Stack } from "@mui/material";
+import { Container, Typography, TextField, Button, Stack, Alert } from "@mui/material";
 
 const LoginPage = () => {
     const context = useContext(AuthContext);
 
     const [userName, setUserName] = useState("");
     const [password, setPassword] = useState("");
+    const [errorMessage, setErrorMessage] = useState("");
 
-    const login = () => {
-        context.authenticate(userName, password);
+    const login = async () => {
+        setErrorMessage("");
+        try {
+            const result = await context.authenticate(userName, password);
+            if (!result.token) {
+                setErrorMessage(result.msg);
+            }
+        } catch {
+            setErrorMessage("Unable to reach the server. Please try again.");
+        }
     };
 
     let location = useLocation();
@@ -33,6 +42,8 @@ const LoginPage = () => {
                 <Typography>
                     You must log in to view the protected pages
                 </Typography>
+
+                {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
 
                 <TextField
                     id="username"

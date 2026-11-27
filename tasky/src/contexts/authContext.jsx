@@ -22,11 +22,12 @@ const AuthContextProvider = (props) => {
       setIsAuthenticated(true);
       setUserName(username);
     }
+    return result;
   };
 
   const register = async (username, password) => {
     const result = await signup(username, password);
-    return result.success;
+    return result;
   };
 
   const signout = () => {

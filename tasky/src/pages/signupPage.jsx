@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import { Navigate } from "react-router";
 import { AuthContext } from "../contexts/authContext";
-import { Container, Typography, TextField, Button, Stack } from "@mui/material";
+import { Container, Typography, TextField, Button, Stack, Alert } from "@mui/material";
 
 const SignUpPage = () => {
   const context = useContext(AuthContext);
@@ -9,14 +9,32 @@ const SignUpPage = () => {
   const [password, setPassword] = useState("");
   const [passwordAgain, setPasswordAgain] = useState("");
   const [registered, setRegistered] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const register = async () => {
+    setErrorMessage("");
+
     let passwordRegEx = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
     const validPassword = passwordRegEx.test(password);
 
-    if (validPassword && password === passwordAgain) {
+    if (!validPassword) {
+      setErrorMessage("Password must be at least 8 characters and include an uppercase letter, a lowercase letter, a number and a symbol.");
+      return;
+    }
+    if (password !== passwordAgain) {
+      setErrorMessage("Passwords do not match.");
+      return;
+    }
+
+    try {
       let result = await context.register(userName, password);
-      setRegistered(result);
+      if (result.success) {
+        setRegistered(true);
+      } else {
+        setErrorMessage(result.msg);
+      }
+    } catch {
+      setErrorMessage("Unable to reach the server. Please try again.");
     }
   };
 
@@ -37,6 +55,8 @@ const SignUpPage = () => {
           minimum of 8 characters (with at least one uppercase
           letter, one lowercase letter, one number, and one symbol).
         </Typography>
+
+        {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
 
         <TextField
           label="User name"

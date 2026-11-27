@@ -1,7 +1,27 @@
+import { useContext, useState } from "react";
+import { Navigate, useLocation } from "react-router";
+import { AuthContext } from "../contexts/authContext";
 import { Link } from "react-router";
 import { Container, Typography, TextField, Button, Stack } from "@mui/material";
 
 const LoginPage = () => {
+    const context = useContext(AuthContext);
+
+    const [userName, setUserName] = useState("");
+    const [password, setPassword] = useState("");
+
+    const login = () => {
+        context.authenticate(userName, password);
+    };
+
+    let location = useLocation();
+
+    // Set 'from' to path where browser is redirected after a successful login - either / or the protected path user requested
+    const { from } = location.state ? { from: location.state.from.pathname } : { from: "/" };
+
+    if (context.isAuthenticated === true) {
+        return <Navigate to={from} />;
+    }
 
     return (
         <Container maxWidth="xs" sx={{ mt: 4, textAlign: "center" }}>
@@ -17,15 +37,21 @@ const LoginPage = () => {
                 <TextField
                     id="username"
                     label="User name"
+                    onChange={e => {
+                        setUserName(e.target.value);
+                    }}
                 />
 
                 <TextField
                     id="password"
                     label="Password"
                     type="password"
+                    onChange={e => {
+                        setPassword(e.target.value);
+                    }}
                 />
 
-                <Button variant="contained">
+                <Button variant="contained" onClick={login}>
                     Log in
                 </Button>
 

@@ -5,11 +5,14 @@ import TasksPage from "./pages/tasksPage";
 import StartPage from "./pages/startPage";
 import ProfilePage from "./pages/profilePage";
 import { Container, Typography } from "@mui/material";
+import AuthContextProvider from "./contexts/authContext";
+import ProtectedRoutes from "./protectedRoutes";
 import './App.css';
 
 const App = () => {
   return (
     <BrowserRouter>
+      <AuthContextProvider>
         {/* App Header */}
           <Container component="main">
             <Typography
@@ -35,10 +38,13 @@ const App = () => {
           <Route path="/" element={< StartPage />} />
           <Route path="/login" element={< LoginPage />} />
           <Route path="/signup" element={< SignupPage />} />
-          <Route path="/tasks" element={< TasksPage />} />
           <Route path="/profile" element={< ProfilePage />} />
+          <Route element={<ProtectedRoutes />}>
+            <Route path="/tasks" element={< TasksPage />} />
+          </Route>
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
+      </AuthContextProvider>
     </BrowserRouter>
   );
 };
